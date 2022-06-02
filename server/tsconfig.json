@@ -1,43 +1,39 @@
 {
   "compilerOptions": {
+    "target": "es6",
     "module": "commonjs",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2016", // or newer if your node.js version supports this
+    "lib": [
+      "dom",
+      "es6",
+      "es2017",
+      "esnext.asynciterable"
+    ],
+    "sourceMap": true,
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "declaration": false,
+    "composite": false,
+    "removeComments": true,
+    "noImplicitAny": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "skipLibCheck": true,
-    "declaration": false,
     "noFallthroughCasesInSwitch": true,
-    "composite": false,
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "lib": [
-      "dom",
-      "es2016",
-      "esnext.asynciterable"
-    ],
-    "sourceMap": true,
+    "allowSyntheticDefaultImports": false,
     "emitDecoratorMetadata": true,
-    "strict": false,
     "experimentalDecorators": true,
-    "outDir": "dist",
-    "rootDir": "app",
+    "skipLibCheck": true,
     "baseUrl": ".",
-    "paths": {
-      "*": [
-        "node_modules/*",
-        "app/types/*"
-      ]
-    }
+    "rootDir": "src"
   },
+  "exclude": [
+    "node_modules"
+  ],
   "include": [
-    "app/**/*",
-    "./app/**/*.ts",
-    "./app/**/*.tsx"
+    "./src/**/*.tsx",
+    "./src/**/*.ts"
   ]
 }

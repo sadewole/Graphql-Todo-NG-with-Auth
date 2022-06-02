@@ -4,9 +4,9 @@
   "description": "BE - Apollo Graphql, FE - Nextjs",
   "main": "index.js",
   "scripts": {
-    "start": "npm run serve",
-    "serve": "node dist/server.js",
-    "watch-node": "nodemon dist/server.js",
+    "start": "npm run index",
+    "serve": "node dist/index.js",
+    "watch-node": "nodemon dist/index.js",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "test": "npm run test"
@@ -39,7 +39,7 @@
     "type-graphql": "^1.1.1"
   },
   "devDependencies": {
-    "@types/express": "github:types/express",
+    "@types/express": "^4.17.13",
     "@types/node": "^17.0.36",
     "nodemon": "^2.0.16",
     "ts-node": "^10.8.0",
