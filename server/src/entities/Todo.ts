@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID, Int } from 'type-graphql';
+import { ObjectType, Field, ID } from 'type-graphql';
 import { prop as Property, getModelForClass } from '@typegoose/typegoose';
 import { __Type } from 'graphql';
 
@@ -9,23 +9,11 @@ export class Todo {
 
   @Field()
   @Property()
-  name: String;
+  title: String;
 
   @Field()
   @Property()
-  description: String;
-
-  @Field()
-  @Property()
-  color: String;
-
-  @Field((_type) => Int)
-  @Property()
-  stock: number;
-
-  @Field((_type) => Int)
-  @Property()
-  price: number;
+  completed: Boolean;
 }
 
 export const TodoModel = getModelForClass(Todo);

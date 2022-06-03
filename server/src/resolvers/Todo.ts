@@ -17,16 +17,12 @@ export class TodoResolver {
   @Mutation(() => Todo)
   async createTodo(
     @Arg('data')
-    { name, description, color, stock, price, category_id }: TodoInput
+    { title }: TodoInput
   ): Promise<Todo> {
     const todo = (
       await TodoModel.create({
-        name,
-        description,
-        color,
-        stock,
-        price,
-        category_id,
+        title,
+        completed: false,
       })
     ).save();
     return todo;

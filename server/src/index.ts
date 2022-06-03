@@ -4,6 +4,7 @@ import * as Express from 'express';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { connect } from 'mongoose';
+import 'dotenv/config';
 
 import { TodoResolver } from './resolvers/Todo';
 
@@ -15,8 +16,11 @@ const main = async () => {
   });
 
   // create mongoose connection
-  const mongoose = await connect('mongodb://localhost:27017/test');
-  await mongoose.connection;
+  const mongoose = connect(
+    `mongodb+srv://${process.env.dbUser}:${process.env.dbPassword}@atlascluster.0wbfp81.mongodb.net/?retryWrites=true&w=majority`
+  );
+
+  (await mongoose).connection;
 
   const server = new ApolloServer({
     schema,
