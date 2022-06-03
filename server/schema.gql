@@ -21,6 +21,6 @@ type Todo {
 }
 
 input TodoInput {
-  completed: Boolean!
+  completed: Boolean
   title: String!
 }

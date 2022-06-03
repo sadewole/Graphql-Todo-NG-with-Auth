@@ -8,6 +8,6 @@ export class TodoInput implements Partial<Todo> {
   @Length(1, 255)
   title: String;
 
-  @Field()
+  @Field({ nullable: true })
   completed?: Boolean;
 }
