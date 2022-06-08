@@ -6,8 +6,8 @@ import { Todo } from '../../entities/Todo';
 export class TodoInput implements Partial<Todo> {
   @Field()
   @Length(1, 255)
-  title: String;
+  title: string;
 
   @Field({ nullable: true })
-  completed?: Boolean;
+  completed?: boolean;
 }

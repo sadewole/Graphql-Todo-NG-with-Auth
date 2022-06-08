@@ -3,14 +3,30 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type Mutation {
   createTodo(data: TodoInput!): Todo!
   deleteTodo(id: String!): Boolean!
+  deleteUser(id: String!): Boolean!
+  loginUser(data: LoginInput!): User!
+  registerUser(data: RegisterInput!): User!
 }
 
 type Query {
   returnAllTodo: [Todo!]!
+  returnAllUser: [User!]!
   returnSingleTodo(id: String!): Todo!
+  returnSingleUser(id: String!): User!
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
+  username: String!
 }
 
 """The Todo model"""
@@ -23,4 +39,11 @@ type Todo {
 input TodoInput {
   completed: Boolean
   title: String!
+}
+
+"""The User model"""
+type User {
+  email: String!
+  id: ID!
+  username: String!
 }

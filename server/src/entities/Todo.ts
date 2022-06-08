@@ -8,7 +8,7 @@ export class Todo {
   id: String;
 
   @Field()
-  @Property()
+  @Property({ required: true })
   title: String;
 
   @Field()

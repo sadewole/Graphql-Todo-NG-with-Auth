@@ -1,16 +1,17 @@
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
-import * as Express from 'express';
+import Express from 'express';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { connect } from 'mongoose';
 import 'dotenv/config';
 
 import { TodoResolver } from './resolvers/Todo';
+import { UserResolver } from './resolvers/User';
 
 const main = async () => {
   const schema = await buildSchema({
-    resolvers: [TodoResolver],
+    resolvers: [TodoResolver, UserResolver],
     emitSchemaFile: true,
     validate: false,
   });
@@ -24,6 +25,9 @@ const main = async () => {
 
   const server = new ApolloServer({
     schema,
+    formatError: (error) => {
+      return error;
+    },
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
   });
 
