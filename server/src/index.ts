@@ -18,6 +18,9 @@ const main = async () => {
     resolvers: [TodoResolver, UserResolver],
     emitSchemaFile: true,
     validate: false,
+    authChecker: ({ context: { req } }) => {
+      return !!req.session.userId;
+    },
   });
 
   // create mongoose connection

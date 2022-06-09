@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Arg, Query } from 'type-graphql';
+import { Resolver, Mutation, Arg, Query, Authorized } from 'type-graphql';
 import { Todo, TodoModel } from '../entities/Todo';
 import { TodoInput } from './types/todo-input';
 
@@ -14,6 +14,7 @@ export class TodoResolver {
     return await TodoModel.find();
   }
 
+  @Authorized()
   @Mutation(() => Todo)
   async createTodo(
     @Arg('data')
@@ -28,6 +29,26 @@ export class TodoResolver {
     return todo;
   }
 
+  @Authorized()
+  @Mutation(() => Todo)
+  async updateTodo(
+    @Arg('id') id: string,
+    @Arg('data')
+    { title, completed }: TodoInput
+  ): Promise<Todo> {
+    const todo = (await TodoModel.findByIdAndUpdate(
+      id,
+      {
+        title,
+        completed,
+      },
+      { new: true }
+    ))!.save();
+
+    return todo;
+  }
+
+  @Authorized()
   @Mutation(() => Boolean)
   async deleteTodo(@Arg('id') id: string) {
     await TodoModel.deleteOne({ id });
