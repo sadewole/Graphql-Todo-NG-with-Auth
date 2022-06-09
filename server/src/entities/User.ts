@@ -5,18 +5,18 @@ import { __Type } from 'graphql';
 @ObjectType({ description: 'The User model' })
 export class User {
   @Field(() => ID)
-  id: String;
+  id: string;
 
   @Field()
   @Property()
-  username: String;
+  username: string;
 
   @Field()
   @Property({ unique: true, required: true })
-  email: String;
+  email: string;
 
   @Property({ required: true })
-  password: String;
+  password: string;
 }
 
 export const UserModel = getModelForClass(User);

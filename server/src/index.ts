@@ -5,6 +5,10 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { connect } from 'mongoose';
 import 'dotenv/config';
+import session from 'express-session';
+import connectRedis from 'connect-redis';
+import cors from 'cors';
+import { redis } from './redis';
 
 import { TodoResolver } from './resolvers/Todo';
 import { UserResolver } from './resolvers/User';
@@ -29,9 +33,36 @@ const main = async () => {
       return error;
     },
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
+    context: ({ req }) => ({ req }),
   });
 
   const app = Express();
+
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    })
+  );
+
+  const RedisStore = connectRedis(session);
+
+  app.use(
+    session({
+      store: new RedisStore({
+        client: redis,
+      }),
+      name: 'qid',
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      },
+    } as any)
+  );
 
   await server.start();
 

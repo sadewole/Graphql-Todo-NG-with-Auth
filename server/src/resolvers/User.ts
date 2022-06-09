@@ -1,18 +1,8 @@
-import { Resolver, Mutation, Arg, Query } from 'type-graphql';
+import { Resolver, Mutation, Arg, Query, Ctx } from 'type-graphql';
 import { User, UserModel } from '../entities/User';
 import { RegisterInput, LoginInput } from './types/user-input';
 import bcrypt from 'bcryptjs';
-// import * as jwt from 'jsonwebtoken'
-
-// const token = (user: { id: any; username: any; email: any; })=> {
-//     return jwt.sign({
-//         id: user.id,
-//         username: user.username,
-//         email: user.email
-//     }, process.env.JWT_SECRET, {
-//         expiresIn: '1h'
-//     })
-// }
+import { MyContext } from 'src/types/MyContext';
 
 @Resolver((_of) => User)
 export class UserResolver {
@@ -24,6 +14,14 @@ export class UserResolver {
   @Query(() => [User])
   async returnAllUser() {
     return await UserModel.find();
+  }
+
+  @Query(() => User, { nullable: false })
+  async me(@Ctx() ctx: MyContext): Promise<User | null> {
+    if (!ctx.req.session!.userId) {
+      return null;
+    }
+    return await UserModel.findById(ctx.req.session!.userId);
   }
 
   @Mutation(() => User)
@@ -42,16 +40,26 @@ export class UserResolver {
     return user;
   }
 
-  @Mutation(() => User)
+  @Mutation(() => User, { nullable: true })
   async loginUser(
     @Arg('data')
-    login: LoginInput
-  ): Promise<User> {
-    const user = (
-      await UserModel.create({
-        ...login,
-      })
-    ).save();
+    { email, password }: LoginInput,
+    @Ctx() ctx: MyContext
+  ): Promise<User | null> {
+    const user = await UserModel.findOne({
+      email: email,
+    });
+    if (!user) {
+      return null;
+    }
+
+    const isValid = bcrypt.compare(password, user.password);
+    if (!isValid) {
+      return null;
+    }
+
+    ctx.req.session!.userId = user.id;
+
     return user;
   }
 

@@ -5,15 +5,15 @@ import { __Type } from 'graphql';
 @ObjectType({ description: 'The Todo model' })
 export class Todo {
   @Field(() => ID)
-  id: String;
+  id: string;
 
   @Field()
   @Property({ required: true })
-  title: String;
+  title: string;
 
   @Field()
   @Property()
-  completed: Boolean;
+  completed: boolean;
 }
 
 export const TodoModel = getModelForClass(Todo);

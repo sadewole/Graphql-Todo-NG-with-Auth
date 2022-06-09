@@ -12,11 +12,12 @@ type Mutation {
   createTodo(data: TodoInput!): Todo!
   deleteTodo(id: String!): Boolean!
   deleteUser(id: String!): Boolean!
-  loginUser(data: LoginInput!): User!
+  loginUser(data: LoginInput!): User
   registerUser(data: RegisterInput!): User!
 }
 
 type Query {
+  me: User!
   returnAllTodo: [Todo!]!
   returnAllUser: [User!]!
   returnSingleTodo(id: String!): Todo!
