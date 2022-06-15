@@ -61,7 +61,6 @@ export class UserResolver {
     }
 
     const isValid = await bcrypt.compare(password, user.password);
-    console.log('isValid', isValid);
     if (!isValid) {
       return null;
     }
