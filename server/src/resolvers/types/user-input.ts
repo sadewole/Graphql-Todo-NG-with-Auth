@@ -28,3 +28,12 @@ export class LoginInput implements Partial<User> {
   @Field()
   password: string;
 }
+
+@InputType()
+export class ResetPasswordInput implements Partial<User> {
+  @Field()
+  token: string;
+
+  @Field()
+  password: string;
+}

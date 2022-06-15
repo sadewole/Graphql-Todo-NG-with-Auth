@@ -1,9 +1,16 @@
 import { Resolver, Mutation, Arg, Query, Ctx } from 'type-graphql';
 import { User, UserModel } from '../entities/User';
-import { RegisterInput, LoginInput } from './types/user-input';
+import {
+  RegisterInput,
+  LoginInput,
+  ResetPasswordInput,
+} from './types/user-input';
 import bcrypt from 'bcryptjs';
-import { MyContext } from 'src/types/MyContext';
-
+import { MyContext } from '../types/myContext';
+import { v4 } from 'uuid';
+import { redis } from '../redis';
+import { sendEmail } from '../utils/sendEmail';
+import { forgotPasswordPrefix } from '../constants';
 @Resolver((_of) => User)
 export class UserResolver {
   @Query((_returns) => User, { nullable: false })
@@ -53,7 +60,8 @@ export class UserResolver {
       return null;
     }
 
-    const isValid = bcrypt.compare(password, user.password);
+    const isValid = await bcrypt.compare(password, user.password);
+    console.log('isValid', isValid);
     if (!isValid) {
       return null;
     }
@@ -61,6 +69,44 @@ export class UserResolver {
     ctx.req.session!.userId = user.id;
 
     return user;
+  }
+
+  @Mutation(() => Boolean)
+  async forgotPassword(@Arg('email') email: string): Promise<boolean> {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return false;
+    }
+
+    const token = v4();
+    await redis.set(forgotPasswordPrefix + token, user.id, 'EX', 60 * 60 * 24); // 1 day expiration
+
+    const url = `http://localhost:3000/reset-password?token=${token}`;
+    await sendEmail(email, url);
+
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async resetPassword(@Arg('data') data: ResetPasswordInput): Promise<boolean> {
+    const { token, password } = data;
+    const userId = await redis.get(forgotPasswordPrefix + token);
+    if (!userId) {
+      return false;
+    }
+
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return false;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    user.password = hashedPassword;
+    await user.save();
+    await redis.del(forgotPasswordPrefix + token);
+
+    return true;
   }
 
   @Mutation(() => Boolean)
