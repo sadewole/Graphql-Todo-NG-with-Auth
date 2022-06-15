@@ -86,17 +86,20 @@ export class UserResolver {
     return true;
   }
 
-  @Mutation(() => Boolean)
-  async resetPassword(@Arg('data') data: ResetPasswordInput): Promise<boolean> {
+  @Mutation(() => User, { nullable: false })
+  async resetPassword(
+    @Arg('data') data: ResetPasswordInput,
+    @Ctx() ctx: MyContext
+  ): Promise<User | null> {
     const { token, password } = data;
     const userId = await redis.get(forgotPasswordPrefix + token);
     if (!userId) {
-      return false;
+      return null;
     }
 
     const user = await UserModel.findById(userId);
     if (!user) {
-      return false;
+      return null;
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -105,7 +108,9 @@ export class UserResolver {
     await user.save();
     await redis.del(forgotPasswordPrefix + token);
 
-    return true;
+    ctx.req.session!.userId = user.id;
+
+    return user;
   }
 
   @Mutation(() => Boolean)

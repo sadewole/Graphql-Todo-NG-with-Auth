@@ -15,7 +15,7 @@ type Mutation {
   forgotPassword(email: String!): Boolean!
   loginUser(data: LoginInput!): User
   registerUser(data: RegisterInput!): User!
-  resetPassword(data: ResetPasswordInput!): Boolean!
+  resetPassword(data: ResetPasswordInput!): User!
   updateTodo(data: TodoInput!, id: String!): Todo!
 }
 

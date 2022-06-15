@@ -35,5 +35,6 @@ export class ResetPasswordInput implements Partial<User> {
   token: string;
 
   @Field()
+  @MinLength(3)
   password: string;
 }

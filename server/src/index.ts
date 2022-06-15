@@ -10,12 +10,9 @@ import connectRedis from 'connect-redis';
 import cors from 'cors';
 import { redis } from './redis';
 
-import { TodoResolver } from './resolvers/Todo';
-import { UserResolver } from './resolvers/User';
-
 const main = async () => {
   const schema = await buildSchema({
-    resolvers: [TodoResolver, UserResolver],
+    resolvers: [__dirname + '/resolvers/*.ts'],
     emitSchemaFile: true,
     validate: false,
     authChecker: ({ context: { req } }) => {
