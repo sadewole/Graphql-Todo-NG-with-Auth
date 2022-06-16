@@ -119,11 +119,11 @@ export class UserResolver {
       ctx.req.session!.destroy((err) => {
         if (err) {
           console.log(err);
-          reject(false);
+          return reject(false);
         }
 
         ctx.res.clearCookie('qid');
-        resolve(true);
+        return resolve(true);
       });
     });
   }
