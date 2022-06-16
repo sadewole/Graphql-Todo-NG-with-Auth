@@ -65,6 +65,8 @@ export class UserResolver {
       return null;
     }
 
+    // console.log(user);
+
     ctx.req.session!.userId = user.id;
 
     return user;
@@ -111,6 +113,21 @@ export class UserResolver {
     ctx.req.session!.userId = user.id;
 
     return user;
+  }
+
+  @Mutation(() => Boolean)
+  async logout(@Ctx() ctx: MyContext): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      ctx.req.session!.destroy((err) => {
+        if (err) {
+          console.log(err);
+          reject(false);
+        }
+
+        ctx.res.clearCookie('qid');
+        resolve(true);
+      });
+    });
   }
 
   @Mutation(() => Boolean)
