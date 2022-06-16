@@ -65,8 +65,6 @@ export class UserResolver {
       return null;
     }
 
-    // console.log(user);
-
     ctx.req.session!.userId = user.id;
 
     return user;
