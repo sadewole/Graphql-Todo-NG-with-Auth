@@ -33,7 +33,7 @@ const main = async () => {
       return error;
     },
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
-    context: ({ req }) => ({ req }),
+    context: ({ req, res }) => ({ req, res }),
   });
 
   const app = Express();
