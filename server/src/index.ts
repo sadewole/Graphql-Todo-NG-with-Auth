@@ -14,7 +14,7 @@ const main = async () => {
   const schema = await buildSchema({
     resolvers: [__dirname + '/resolvers/*.ts'],
     emitSchemaFile: true,
-    validate: false,
+    // validate: false,
     authChecker: ({ context: { req } }) => {
       return !!req.session.userId;
     },

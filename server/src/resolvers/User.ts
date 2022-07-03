@@ -11,6 +11,9 @@ import { v4 } from 'uuid';
 import { redis } from '../redis';
 import { sendEmail } from '../utils/sendEmail';
 import { forgotPasswordPrefix } from '../constants';
+import { UserInputError } from 'apollo-server-core';
+import { isValidEmail } from './validators/validateInputs';
+
 @Resolver((_of) => User)
 export class UserResolver {
   @Query((_returns) => User, { nullable: false })
@@ -34,20 +37,27 @@ export class UserResolver {
   @Mutation(() => User)
   async registerUser(
     @Arg('data')
-    { username, email, password }: RegisterInput
+    data: RegisterInput
   ): Promise<User> {
+    if (data.password.length < 3) {
+      throw new UserInputError('Password length is too short', {
+        argumentName: 'password',
+      });
+    }
+    const { username, email, password } = data;
     const hashedPassword = await bcrypt.hash(password, 12);
-    const user = (
-      await UserModel.create({
-        username,
-        email,
-        password: hashedPassword,
-      })
-    ).save();
+    const user = await UserModel.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
+    user.save();
+
     return user;
   }
 
   @Mutation(() => User, { nullable: true })
+  @isValidEmail(LoginInput)
   async loginUser(
     @Arg('data')
     { email, password }: LoginInput,
