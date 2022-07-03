@@ -11,7 +11,7 @@ import { v4 } from 'uuid';
 import { redis } from '../redis';
 import { sendEmail } from '../utils/sendEmail';
 import { forgotPasswordPrefix } from '../constants';
-import { UserInputError } from 'apollo-server-core';
+import { ApolloError, UserInputError } from 'apollo-server-core';
 import { isValidEmail } from './validators/validateInputs';
 
 @Resolver((_of) => User)
@@ -67,12 +67,12 @@ export class UserResolver {
       email: email,
     });
     if (!user) {
-      return null;
+      throw new ApolloError('Invalid email or password', 'UNAUTHENTICATED');
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      return null;
+      throw new ApolloError('Invalid email or password', 'UNAUTHENTICATED');
     }
 
     ctx.req.session!.userId = user.id;
