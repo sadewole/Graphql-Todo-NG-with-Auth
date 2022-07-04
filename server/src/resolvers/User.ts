@@ -37,21 +37,21 @@ export class UserResolver {
   @Mutation(() => User)
   async registerUser(
     @Arg('data')
-    data: RegisterInput
+    { username, email, password }: RegisterInput
   ): Promise<User> {
-    if (data.password.length < 3) {
+    if (password.length < 3) {
       throw new UserInputError('Password length is too short', {
         argumentName: 'password',
       });
     }
-    const { username, email, password } = data;
     const hashedPassword = await bcrypt.hash(password, 12);
-    const user = await UserModel.create({
-      username,
-      email,
-      password: hashedPassword,
-    });
-    user.save();
+    const user = (
+      await UserModel.create({
+        username,
+        email,
+        password: hashedPassword,
+      })
+    ).save();
 
     return user;
   }
@@ -140,7 +140,11 @@ export class UserResolver {
 
   @Mutation(() => Boolean)
   async deleteUser(@Arg('id') id: string) {
-    await UserModel.deleteOne({ id });
-    return true;
+    try {
+      await UserModel.deleteOne({ id });
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
