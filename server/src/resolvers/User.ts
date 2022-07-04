@@ -12,7 +12,7 @@ import { redis } from '../redis';
 import { sendEmail } from '../utils/sendEmail';
 import { forgotPasswordPrefix } from '../constants';
 import { ApolloError, UserInputError } from 'apollo-server-core';
-import { isValidEmail } from './validators/validateInputs';
+import { isValidEmail } from './decorators/validateLoginInputs';
 
 @Resolver((_of) => User)
 export class UserResolver {
@@ -56,13 +56,13 @@ export class UserResolver {
     return user;
   }
 
-  @Mutation(() => User, { nullable: true })
+  @Mutation(() => User)
   @isValidEmail(LoginInput)
   async loginUser(
     @Arg('data')
     { email, password }: LoginInput,
     @Ctx() ctx: MyContext
-  ): Promise<User | null> {
+  ): Promise<User> {
     const user = await UserModel.findOne({
       email: email,
     });
