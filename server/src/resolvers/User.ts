@@ -17,8 +17,8 @@ import { validateEmailPassword } from './decorators/validateRegisterInputs';
 
 @Resolver((_of) => User)
 export class UserResolver {
-  @Query((_returns) => User, { nullable: false })
-  async returnSingleUser(@Arg('id') id: string) {
+  @Query((_returns) => User, { nullable: true })
+  async returnSingleUser(@Arg('id') id: string): Promise<User | null> {
     return await UserModel.findById({ _id: id });
   }
 
@@ -27,7 +27,7 @@ export class UserResolver {
     return await UserModel.find();
   }
 
-  @Query(() => User, { nullable: false })
+  @Query(() => User, { nullable: true })
   async me(@Ctx() ctx: MyContext): Promise<User | null> {
     // you are not logged in
     if (!ctx.req.session!.userId) {

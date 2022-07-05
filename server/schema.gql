@@ -21,11 +21,11 @@ type Mutation {
 }
 
 type Query {
-  me: User!
+  me: User
   returnAllTodo: [Todo!]!
   returnAllUser: [User!]!
   returnSingleTodo(id: String!): Todo!
-  returnSingleUser(id: String!): User!
+  returnSingleUser(id: String!): User
 }
 
 input RegisterInput {
@@ -44,6 +44,8 @@ type Todo {
   completed: Boolean!
   id: ID!
   title: String!
+  user: User!
+  user_id: String!
 }
 
 input TodoInput {
