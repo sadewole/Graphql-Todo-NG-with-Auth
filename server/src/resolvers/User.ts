@@ -11,6 +11,10 @@ import { v4 } from 'uuid';
 import { redis } from '../redis';
 import { sendEmail } from '../utils/sendEmail';
 import { forgotPasswordPrefix } from '../constants';
+import { ApolloError } from 'apollo-server-core';
+import { isValidEmail } from './decorators/validateLoginInputs';
+import { validateEmailPassword } from './decorators/validateRegisterInputs';
+
 @Resolver((_of) => User)
 export class UserResolver {
   @Query((_returns) => User, { nullable: false })
@@ -25,6 +29,7 @@ export class UserResolver {
 
   @Query(() => User, { nullable: false })
   async me(@Ctx() ctx: MyContext): Promise<User | null> {
+    // you are not logged in
     if (!ctx.req.session!.userId) {
       return null;
     }
@@ -32,10 +37,18 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
+  @validateEmailPassword(RegisterInput)
   async registerUser(
     @Arg('data')
     { username, email, password }: RegisterInput
   ): Promise<User> {
+    const existUser = await UserModel.findOne({
+      email,
+    });
+    if (existUser) {
+      throw new ApolloError('Email already exist', 'AUTH_ERROR');
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = (
       await UserModel.create({
@@ -44,25 +57,27 @@ export class UserResolver {
         password: hashedPassword,
       })
     ).save();
+
     return user;
   }
 
-  @Mutation(() => User, { nullable: true })
+  @Mutation(() => User)
+  @isValidEmail(LoginInput)
   async loginUser(
     @Arg('data')
     { email, password }: LoginInput,
     @Ctx() ctx: MyContext
-  ): Promise<User | null> {
+  ): Promise<User> {
     const user = await UserModel.findOne({
-      email: email,
+      email,
     });
     if (!user) {
-      return null;
+      throw new ApolloError('Invalid email or password', 'AUTH_ERROR');
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      return null;
+      throw new ApolloError('Invalid email or password', 'AUTH_ERROR');
     }
 
     ctx.req.session!.userId = user.id;
@@ -74,7 +89,7 @@ export class UserResolver {
   async forgotPassword(@Arg('email') email: string): Promise<boolean> {
     const user = await UserModel.findOne({ email });
     if (!user) {
-      return false;
+      throw new ApolloError('User doesn not exist', 'AUTH_ERROR');
     }
 
     const token = v4();
@@ -86,20 +101,20 @@ export class UserResolver {
     return true;
   }
 
-  @Mutation(() => User, { nullable: false })
+  @Mutation(() => User)
   async resetPassword(
     @Arg('data') data: ResetPasswordInput,
     @Ctx() ctx: MyContext
-  ): Promise<User | null> {
+  ): Promise<User> {
     const { token, password } = data;
     const userId = await redis.get(forgotPasswordPrefix + token);
     if (!userId) {
-      return null;
+      throw new ApolloError('Invalid token', 'AUTH_ERROR');
     }
 
     const user = await UserModel.findById(userId);
     if (!user) {
-      return null;
+      throw new ApolloError('User does not exist', 'AUTH_ERROR');
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
