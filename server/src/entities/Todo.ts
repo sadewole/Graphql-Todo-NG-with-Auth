@@ -16,7 +16,7 @@ export class Todo {
   @Property()
   completed: boolean;
 
-  @Field((_type) => String)
+  @Field(() => ID)
   @Property({ ref: User, required: true })
   user_id: Ref<User>;
   _doc: any;
