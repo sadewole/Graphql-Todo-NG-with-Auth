@@ -9,6 +9,7 @@ import session from 'express-session';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
 import { redis } from './redis';
+import { createUserLoader } from './utils/createUserLoader';
 
 const main = async () => {
   const schema = await buildSchema({
@@ -33,7 +34,7 @@ const main = async () => {
       return error;
     },
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
-    context: ({ req, res }) => ({ req, res }),
+    context: ({ req, res }) => ({ req, res, userLoader: createUserLoader() }),
   });
 
   const app = Express();

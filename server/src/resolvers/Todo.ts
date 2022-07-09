@@ -10,7 +10,7 @@ import {
 } from 'type-graphql';
 import { Todo, TodoModel } from '../entities/Todo';
 import { TodoInput } from './types/todo-input';
-import { User, UserModel } from '../entities/User';
+import { User } from '../entities/User';
 import { MyContext } from 'src/types/myContext';
 
 @Resolver((_of) => Todo)
@@ -68,9 +68,12 @@ export class TodoResolver {
     return true;
   }
 
-  // Extract user field on Todo
+  // Extract user field on Todo using batch operation
   @FieldResolver((_type) => User)
-  async user(@Root() todo: Todo): Promise<User> {
-    return (await UserModel.findById(todo._doc.user_id))!;
+  async user(
+    @Root() todo: Todo,
+    @Ctx() { userLoader }: MyContext
+  ): Promise<User> {
+    return await userLoader.load(todo._doc.user_id);
   }
 }
