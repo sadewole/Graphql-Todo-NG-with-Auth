@@ -1,8 +1,10 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-// import { AuthBase } from '../components/auth/AuthBase';
+import { useState } from 'react';
+import { AuthBase } from '../components/auth/AuthBase';
 
 const Home: NextPage = () => {
+  const [authModal, setAuthModal] = useState(false);
   return (
     <div className='container mx-auto'>
       <Head>
@@ -25,13 +27,16 @@ const Home: NextPage = () => {
               />
             </svg>
           </a>
-          <button className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-3 py-2 text-center'>
+          <button
+            className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-3 py-2 text-center'
+            onClick={() => setAuthModal(true)}
+          >
             Sign In
           </button>
         </div>
       </header>
       <main></main>
-      {/* <AuthBase /> */}
+      <AuthBase open={authModal} setOpen={setAuthModal} />
     </div>
   );
 };
