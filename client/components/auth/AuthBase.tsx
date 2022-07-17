@@ -23,7 +23,7 @@ export const AuthBase = ({
     <Portal>
       <div
         id='defaultModal'
-        className={`fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full justify-center flex bg-transparent ${
+        className={`fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full justify-center flex bg-black/50 ${
           open ? '' : 'invisible'
         }`}
       >
