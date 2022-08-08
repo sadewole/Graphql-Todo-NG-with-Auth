@@ -5,7 +5,7 @@ import { InputField } from '../InputField';
 import { useRegisterMutation } from '../../generated/graphql';
 
 const Register = () => {
-  const [{ error }, register] = useRegisterMutation();
+  const [_, register] = useRegisterMutation();
   return (
     <Formik
       initialValues={{ username: '', email: '', password: '', submit: null }}
@@ -23,9 +23,9 @@ const Register = () => {
       onSubmit={async ({ submit, ...values }, { setErrors }) => {
         const response = await register(values);
 
-        if (error) {
+        if (response.error) {
           setErrors({
-            submit: error.graphQLErrors[0].message,
+            submit: response.error.graphQLErrors[0].message,
           });
         } else {
           console.log('registered successfully');
