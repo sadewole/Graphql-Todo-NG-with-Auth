@@ -67,7 +67,7 @@ const main = async () => {
 
   await server.start();
 
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, cors: false });
 
   app.listen({ port: 3333 }, () =>
     console.log(
