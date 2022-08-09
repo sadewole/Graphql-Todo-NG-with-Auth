@@ -31,6 +31,7 @@ const Register = ({ setOpen }: { setOpen: Function }) => {
         } else {
           toast.success('registered successfully', {
             position: 'top-right',
+            duration: 5000,
           });
           setOpen(false);
         }

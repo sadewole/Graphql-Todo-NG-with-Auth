@@ -127,6 +127,14 @@ export type User = {
   username: Scalars['String'];
 };
 
+export type LoginMutationVariables = Exact<{
+  password: Scalars['String'];
+  email: Scalars['String'];
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'User', id: string, email: string, username: string } };
+
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
@@ -136,7 +144,25 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'User', id: string, email: string, username: string } };
 
+export type FetchUserQueryVariables = Exact<{ [key: string]: never; }>;
 
+
+export type FetchUserQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null };
+
+
+export const LoginDocument = gql`
+    mutation Login($password: String!, $email: String!) {
+  loginUser(data: {email: $email, password: $password}) {
+    id
+    email
+    username
+  }
+}
+    `;
+
+export function useLoginMutation() {
+  return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
+};
 export const RegisterDocument = gql`
     mutation Register($username: String!, $password: String!, $email: String!) {
   registerUser(data: {username: $username, password: $password, email: $email}) {
@@ -149,4 +175,17 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const FetchUserDocument = gql`
+    query FetchUser {
+  me {
+    id
+    username
+    email
+  }
+}
+    `;
+
+export function useFetchUserQuery(options?: Omit<Urql.UseQueryArgs<FetchUserQueryVariables>, 'query'>) {
+  return Urql.useQuery<FetchUserQuery>({ query: FetchUserDocument, ...options });
 };
