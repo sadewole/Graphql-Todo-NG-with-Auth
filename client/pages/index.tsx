@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { AuthBase } from '../components/auth/AuthBase';
 
 const Home: NextPage = () => {
@@ -34,6 +35,7 @@ const Home: NextPage = () => {
       </header>
       <main></main>
       <AuthBase open={authModal} setOpen={setAuthModal} />
+      <Toaster />
     </div>
   );
 };

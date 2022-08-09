@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { InputField } from '../InputField';
 
-const Login = () => (
+const Login = ({ setOpen }: { setOpen: Function }) => (
   <Formik
     initialValues={{ username: '', email: '', password: '' }}
     validationSchema={yup.object().shape({

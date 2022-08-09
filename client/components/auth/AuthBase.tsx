@@ -72,7 +72,11 @@ export const AuthBase = ({
               </button>
             </div>
             <div className='p-6 space-y-6'>
-              {tab === 1 ? <Login /> : <Register />}
+              {tab === 1 ? (
+                <Login setOpen={setOpen} />
+              ) : (
+                <Register setOpen={setOpen} />
+              )}
             </div>
           </div>
         </div>

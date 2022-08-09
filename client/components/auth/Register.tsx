@@ -3,8 +3,9 @@ import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { InputField } from '../InputField';
 import { useRegisterMutation } from '../../generated/graphql';
+import toast from 'react-hot-toast';
 
-const Register = () => {
+const Register = ({ setOpen }: { setOpen: Function }) => {
   const [_, register] = useRegisterMutation();
   return (
     <Formik
@@ -28,7 +29,10 @@ const Register = () => {
             submit: response.error.graphQLErrors[0].message,
           });
         } else {
-          console.log('registered successfully');
+          toast.success('registered successfully', {
+            position: 'top-right',
+          });
+          setOpen(false);
         }
       }}
     >
