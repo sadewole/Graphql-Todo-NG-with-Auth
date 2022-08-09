@@ -40,7 +40,8 @@ export class UserResolver {
   @validateEmailPassword(RegisterInput)
   async registerUser(
     @Arg('data')
-    { username, email, password }: RegisterInput
+    { username, email, password }: RegisterInput,
+    @Ctx() ctx: MyContext
   ): Promise<User> {
     const existUser = await UserModel.findOne({
       email,
@@ -50,13 +51,14 @@ export class UserResolver {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const user = (
-      await UserModel.create({
-        username,
-        email,
-        password: hashedPassword,
-      })
-    ).save();
+    const user = await UserModel.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
+    await user.save();
+
+    ctx.req.session!.userId = user.id;
 
     return user;
   }
