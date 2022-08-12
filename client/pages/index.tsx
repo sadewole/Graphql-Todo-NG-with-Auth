@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
+import AddTodoField from '../components/AddTodoField';
 import { AuthBase } from '../components/auth/AuthBase';
 import { useFetchMeQuery, useLogoutMutation } from '../generated/graphql';
 
@@ -72,7 +73,9 @@ const Home: NextPage = () => {
           )}
         </>
       </header>
-      <main></main>
+      <main>
+        <AddTodoField />
+      </main>
       <AuthBase open={authModal} setOpen={setAuthModal} />
       <Toaster />
     </div>
