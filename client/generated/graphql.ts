@@ -127,6 +127,8 @@ export type User = {
   username: Scalars['String'];
 };
 
+export type RegularUserFragment = { __typename?: 'User', id: string, email: string, username: string };
+
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
   email: Scalars['String'];
@@ -147,18 +149,22 @@ export type RegisterMutation = { __typename?: 'Mutation', registerUser: { __type
 export type FetchMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null };
+export type FetchMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, username: string } | null };
 
-
+export const RegularUserFragmentDoc = gql`
+    fragment RegularUser on User {
+  id
+  email
+  username
+}
+    `;
 export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {
   loginUser(data: {email: $email, password: $password}) {
-    id
-    email
-    username
+    ...RegularUser
   }
 }
-    `;
+    ${RegularUserFragmentDoc}`;
 
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
@@ -166,12 +172,10 @@ export function useLoginMutation() {
 export const RegisterDocument = gql`
     mutation Register($username: String!, $password: String!, $email: String!) {
   registerUser(data: {username: $username, password: $password, email: $email}) {
-    id
-    email
-    username
+    ...RegularUser
   }
 }
-    `;
+    ${RegularUserFragmentDoc}`;
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
@@ -179,12 +183,10 @@ export function useRegisterMutation() {
 export const FetchMeDocument = gql`
     query FetchMe {
   me {
-    id
-    username
-    email
+    ...RegularUser
   }
 }
-    `;
+    ${RegularUserFragmentDoc}`;
 
 export function useFetchMeQuery(options?: Omit<Urql.UseQueryArgs<FetchMeQueryVariables>, 'query'>) {
   return Urql.useQuery<FetchMeQuery>({ query: FetchMeDocument, ...options });

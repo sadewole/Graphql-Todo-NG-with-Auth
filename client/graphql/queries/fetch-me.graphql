@@ -1,7 +1,5 @@
 query FetchMe {
   me {
-    id
-    username
-    email
+    ...RegularUser
   }
 }
