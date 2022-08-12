@@ -14,6 +14,7 @@ import { forgotPasswordPrefix } from '../constants';
 import { ApolloError } from 'apollo-server-core';
 import { isValidEmail } from './decorators/validateLoginInputs';
 import { validateEmailPassword } from './decorators/validateRegisterInputs';
+import 'dotenv/config';
 
 @Resolver((_of) => User)
 export class UserResolver {
@@ -139,7 +140,7 @@ export class UserResolver {
           return reject(false);
         }
 
-        ctx.res.clearCookie('qid');
+        ctx.res.clearCookie(process.env.COOKIE_NAME as string);
         return resolve(true);
       });
     });

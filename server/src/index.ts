@@ -53,7 +53,7 @@ const main = async () => {
       store: new RedisStore({
         client: redis,
       }),
-      name: 'qid',
+      name: process.env.COOKIE_NAME,
       secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
