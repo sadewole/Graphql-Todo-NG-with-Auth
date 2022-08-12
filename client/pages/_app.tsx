@@ -2,7 +2,6 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { createClient, dedupExchange, fetchExchange, Provider } from 'urql';
 import { cacheExchange, QueryInput, Cache } from '@urql/exchange-graphcache';
-import { ContextWrapper } from '../context/contextWrapper';
 import {
   FetchMeDocument,
   FetchMeQuery,
@@ -69,9 +68,7 @@ const client = createClient({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider value={client}>
-      <ContextWrapper>
-        <Component {...pageProps} />
-      </ContextWrapper>
+      <Component {...pageProps} />
     </Provider>
   );
 }
