@@ -1,4 +1,4 @@
-query FetchUser {
+query FetchMe {
   me {
     id
     username

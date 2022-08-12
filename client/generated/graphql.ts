@@ -144,10 +144,10 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'User', id: string, email: string, username: string } };
 
-export type FetchUserQueryVariables = Exact<{ [key: string]: never; }>;
+export type FetchMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchUserQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null };
+export type FetchMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null };
 
 
 export const LoginDocument = gql`
@@ -176,8 +176,8 @@ export const RegisterDocument = gql`
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
-export const FetchUserDocument = gql`
-    query FetchUser {
+export const FetchMeDocument = gql`
+    query FetchMe {
   me {
     id
     username
@@ -186,6 +186,6 @@ export const FetchUserDocument = gql`
 }
     `;
 
-export function useFetchUserQuery(options?: Omit<Urql.UseQueryArgs<FetchUserQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchUserQuery>({ query: FetchUserDocument, ...options });
+export function useFetchMeQuery(options?: Omit<Urql.UseQueryArgs<FetchMeQueryVariables>, 'query'>) {
+  return Urql.useQuery<FetchMeQuery>({ query: FetchMeDocument, ...options });
 };
