@@ -28,11 +28,11 @@ const client = createClient({
     cacheExchange({
       updates: {
         Mutation: {
-          loginUser: (result, args, cache, info) => {
+          loginUser: (_result, _args, _cache, _info) => {
             updateQuery<LoginMutation, FetchMeQuery>(
-              cache,
+              _cache,
               { query: FetchMeDocument },
-              result,
+              _result,
               (result, query) => {
                 if (result.loginUser) {
                   return {
@@ -43,11 +43,11 @@ const client = createClient({
               }
             );
           },
-          registerUser: (result, args, cache, info) => {
+          registerUser: (_result, _args, _cache, _info) => {
             updateQuery<RegisterMutation, FetchMeQuery>(
-              cache,
+              _cache,
               { query: FetchMeDocument },
-              result,
+              _result,
               (result, query) => {
                 if (result.registerUser) {
                   return {
