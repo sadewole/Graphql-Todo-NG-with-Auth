@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { createClient, Provider } from 'urql';
+import { createClient, dedupExchange, fetchExchange, Provider } from 'urql';
+import { cacheExchange } from '@urql/exchange-graphcache';
 import { ContextWrapper } from '../context/contextWrapper';
 
 const client = createClient({
@@ -8,6 +9,7 @@ const client = createClient({
   fetchOptions: {
     credentials: 'include',
   },
+  exchanges: [dedupExchange, cacheExchange({}), fetchExchange],
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
