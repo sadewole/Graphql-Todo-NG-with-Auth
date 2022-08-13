@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import AddTodoField from '../components/AddTodoField';
 import { AuthBase } from '../components/auth/AuthBase';
+import Todo from '../components/Todo';
 import { useFetchMeQuery, useLogoutMutation } from '../generated/graphql';
 
 const Home: NextPage = () => {
@@ -75,6 +76,9 @@ const Home: NextPage = () => {
       </header>
       <main>
         <AddTodoField />
+        {[1, 2, 3].map((item, index) => (
+          <Todo key={index} />
+        ))}
       </main>
       <AuthBase open={authModal} setOpen={setAuthModal} />
       <Toaster />
