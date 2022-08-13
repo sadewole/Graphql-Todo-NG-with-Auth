@@ -1,10 +1,6 @@
 import { UserInputError } from 'apollo-server-core';
 import { ClassType, createMethodDecorator } from 'type-graphql';
-
-function isEmailAddress(str: string): boolean {
-  var pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return pattern.test(str);
-}
+import { isEmailAddress } from '../../utils/emailValidator';
 
 export function validateEmailPassword<T extends object>(Type: ClassType<T>) {
   return createMethodDecorator(async ({ args }, next) => {

@@ -151,6 +151,15 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'User', id: string, email: string, username: string } };
 
+export type UpdateTodoMutationVariables = Exact<{
+  id: Scalars['String'];
+  title: Scalars['String'];
+  completed?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type UpdateTodoMutation = { __typename?: 'Mutation', updateTodo: { __typename?: 'Todo', title: string, completed: boolean, id: string } };
+
 export type FetchMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -198,6 +207,19 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const UpdateTodoDocument = gql`
+    mutation UpdateTodo($id: String!, $title: String!, $completed: Boolean) {
+  updateTodo(id: $id, data: {title: $title, completed: $completed}) {
+    title
+    completed
+    id
+  }
+}
+    `;
+
+export function useUpdateTodoMutation() {
+  return Urql.useMutation<UpdateTodoMutation, UpdateTodoMutationVariables>(UpdateTodoDocument);
 };
 export const FetchMeDocument = gql`
     query FetchMe {
