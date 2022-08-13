@@ -156,6 +156,11 @@ export type FetchMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FetchMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, username: string } | null };
 
+export type FetchTodosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FetchTodosQuery = { __typename?: 'Query', returnAllTodo: Array<{ __typename?: 'Todo', id: string, title: string, completed: boolean, user: { __typename?: 'User', id: string, email: string, username: string } }> };
+
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
@@ -204,4 +209,22 @@ export const FetchMeDocument = gql`
 
 export function useFetchMeQuery(options?: Omit<Urql.UseQueryArgs<FetchMeQueryVariables>, 'query'>) {
   return Urql.useQuery<FetchMeQuery>({ query: FetchMeDocument, ...options });
+};
+export const FetchTodosDocument = gql`
+    query FetchTodos {
+  returnAllTodo {
+    id
+    title
+    completed
+    user {
+      id
+      email
+      username
+    }
+  }
+}
+    `;
+
+export function useFetchTodosQuery(options?: Omit<Urql.UseQueryArgs<FetchTodosQueryVariables>, 'query'>) {
+  return Urql.useQuery<FetchTodosQuery>({ query: FetchTodosDocument, ...options });
 };

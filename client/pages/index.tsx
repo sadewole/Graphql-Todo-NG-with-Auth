@@ -5,11 +5,16 @@ import { Toaster } from 'react-hot-toast';
 import AddTodoField from '../components/AddTodoField';
 import { AuthBase } from '../components/auth/AuthBase';
 import Todo from '../components/Todo';
-import { useFetchMeQuery, useLogoutMutation } from '../generated/graphql';
+import {
+  useFetchMeQuery,
+  useFetchTodosQuery,
+  useLogoutMutation,
+} from '../generated/graphql';
 
 const Home: NextPage = () => {
   const [authModal, setAuthModal] = useState(false);
   const [{ data, fetching }] = useFetchMeQuery();
+  const [{ data: todoData, fetching: todoFetching }] = useFetchTodosQuery();
   const [_, logout] = useLogoutMutation();
 
   const handleLogout = async () => {
@@ -74,11 +79,19 @@ const Home: NextPage = () => {
           )}
         </>
       </header>
-      <main>
+      <main className='max-w-[640px] mx-auto'>
         <AddTodoField />
-        {[1, 2, 3].map((item, index) => (
-          <Todo key={index} />
-        ))}
+
+        {todoFetching
+          ? [1, 2, 3].map((i) => (
+              <div role='status' className='animate-pulse' key={i}>
+                <div className='h-12 bg-gray-200 rounded-lg mb-4' />
+                <span className='sr-only'>Loading...</span>
+              </div>
+            ))
+          : todoData?.returnAllTodo.map((item, index) => (
+              <Todo item={item} key={index} />
+            ))}
       </main>
       <AuthBase open={authModal} setOpen={setAuthModal} />
       <Toaster />

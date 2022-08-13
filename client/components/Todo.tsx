@@ -1,32 +1,42 @@
 import React, { useState } from 'react';
+import { Todo } from '../generated/graphql';
 
-const TodoList = () => {
+type TodoProps = { item: Omit<Todo, 'user_id'> };
+
+const TodoList = ({ item }: TodoProps) => {
   const [hovered, setHovered] = useState(false);
   return (
     <div
-      className='py-2 px-4 flex items-start border rounded-lg max-w-[640px] mx-auto hover:bg-gray-100 mb-4'
+      className={`py-2 px-4 flex items-start border rounded-lg hover:bg-gray-100 mb-4 ${
+        item.completed ? 'bg-gray-100' : ''
+      }`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <div className='flex flex-1 py-2'>
         <div>
           <input
-            id='checkbox'
+            checked={item.completed}
+            id={item.id}
             type='checkbox'
             value=''
             className='w-4 h-4 text-gray-500 cursor-pointer bg-gray-100 rounded border-gray-300 mr-4 peer'
+            onChange={() => {}}
           />
         </div>
 
         <label
-          htmlFor='checkbox'
+          htmlFor={item.id}
           className='peer-checked:line-through peer-checked:text-gray-500 -mt-1'
         >
-          Lorem ipsum dolor sit amet. Lorem ipsum dolor sit,amet Ad est esse
-          Lorem ipsum dolor sit,amet Ad est esse
+          {item.title}
         </label>
       </div>
-      <div className={`flex items-center gap-2 ${!hovered ? 'invisible' : ''}`}>
+      <div
+        className={`flex items-center gap-2 ${
+          !hovered || item.completed ? 'invisible' : ''
+        }`}
+      >
         <button className='p-2 hover:bg-slate-200 hover:rounded-full'>
           <svg
             className='w-4 h-4'

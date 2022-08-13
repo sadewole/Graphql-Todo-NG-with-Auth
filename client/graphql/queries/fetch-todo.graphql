@@ -1,0 +1,12 @@
+query FetchTodos {
+  returnAllTodo {
+    id
+    title
+    completed
+    user {
+      id
+      email
+      username
+    }
+  }
+}
