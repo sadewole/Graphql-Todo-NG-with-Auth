@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Todo } from '../generated/graphql';
+import toast from 'react-hot-toast';
+import { Todo, useUpdateTodoMutation } from '../generated/graphql';
 
 type TodoProps = { item: Omit<Todo, 'user_id'> };
 
@@ -7,9 +8,40 @@ const TodoList = ({ item }: TodoProps) => {
   const [hovered, setHovered] = useState(false);
   const [todo, setTodo] = useState(item);
   const [editable, setEditable] = useState(false);
+  const [_, updateTodo] = useUpdateTodoMutation();
 
-  const handleChange = (evt: any, prop: string) => {
-    setTodo((prev) => ({ ...prev, [prop]: evt.target.value }));
+  const saveUpdatedTodo = async (data: {
+    id: string;
+    title: string;
+    completed: boolean;
+  }) => {
+    const response = await updateTodo(data);
+    if (response.error) {
+      toast.error(response.error.graphQLErrors[0].message, {
+        position: 'top-right',
+        duration: 5000,
+      });
+    } else {
+      toast.success('updated successfully', {
+        position: 'top-right',
+        duration: 5000,
+      });
+    }
+  };
+
+  const handleChange = (value: any, prop: string) => {
+    setTodo((prev) => ({ ...prev, [prop]: value }));
+  };
+
+  const handleSubmit = async () => {
+    if (!todo.title.length) {
+      return toast.error('Item should not be empty', {
+        position: 'top-right',
+        duration: 5000,
+      });
+    }
+    await saveUpdatedTodo({ ...todo });
+    setEditable(false);
   };
 
   return (
@@ -26,10 +58,12 @@ const TodoList = ({ item }: TodoProps) => {
             checked={todo.completed}
             id={todo.id}
             type='checkbox'
-            value=''
             disabled={editable}
             className='w-4 h-4 text-gray-500 cursor-pointer bg-gray-100 rounded border-gray-300 mr-4 peer'
-            onChange={(evt) => handleChange(evt, 'completed')}
+            onChange={async (evt) => {
+              handleChange(evt.target.checked, 'completed');
+              await saveUpdatedTodo({ ...todo, completed: evt.target.checked });
+            }}
           />
         </div>
 
@@ -47,14 +81,17 @@ const TodoList = ({ item }: TodoProps) => {
             id='todo'
             className='block px-0 w-full text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600'
             value={todo.title}
-            onChange={(evt) => handleChange(evt, 'title')}
+            onChange={(evt) => handleChange(evt.target.value, 'title')}
             required
           />
         )}
       </div>
       {editable ? (
         <div className='flex items-center gap-2'>
-          <button className='p-2 hover:bg-slate-200 text-green-500'>
+          <button
+            className='p-2 hover:bg-slate-200 text-green-500'
+            onClick={handleSubmit}
+          >
             <svg
               className='w-4 h-4'
               xmlns='http://www.w3.org/2000/svg'
@@ -67,7 +104,10 @@ const TodoList = ({ item }: TodoProps) => {
           <button
             type='button'
             className='text-red-500 p-2 hover:bg-slate-200'
-            onClick={() => setEditable(false)}
+            onClick={() => {
+              setEditable(false);
+              setTodo(item);
+            }}
           >
             <svg
               className='w-4 h-4'
