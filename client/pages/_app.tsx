@@ -1,27 +1,8 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { createClient, dedupExchange, fetchExchange, Provider } from 'urql';
-import { cacheExchange, QueryInput, Cache } from '@urql/exchange-graphcache';
-import {
-  DeleteTodoDocument,
-  DeleteTodoMutation,
-  FetchMeDocument,
-  FetchMeQuery,
-  FetchTodosDocument,
-  FetchTodosQuery,
-  LoginMutation,
-  LogoutMutation,
-  RegisterMutation,
-} from '../generated/graphql';
-
-function updateQuery<Result, Query>(
-  cache: Cache,
-  qi: QueryInput,
-  result: any,
-  cb: (r: Result, q: Query) => Query
-) {
-  return cache.updateQuery(qi, (data) => cb(result, data as any) as any);
-}
+import { cacheExchange } from '@urql/exchange-graphcache';
+import { Mutation } from '../graphqlCache/mutation';
 
 const client = createClient({
   url: 'http://localhost:3333/graphql',
@@ -32,65 +13,7 @@ const client = createClient({
     dedupExchange,
     cacheExchange({
       updates: {
-        Mutation: {
-          logoutUser: (_result, _args, _cache, _info) => {
-            updateQuery<LogoutMutation, FetchMeQuery>(
-              _cache,
-              { query: FetchMeDocument },
-              _result,
-              () => ({ me: null })
-            );
-          },
-          loginUser: (_result, _args, _cache, _info) => {
-            updateQuery<LoginMutation, FetchMeQuery>(
-              _cache,
-              { query: FetchMeDocument },
-              _result,
-              (result, query) => {
-                if (result.loginUser) {
-                  return {
-                    me: result.loginUser,
-                  };
-                }
-                return query;
-              }
-            );
-          },
-          registerUser: (_result, _args, _cache, _info) => {
-            updateQuery<RegisterMutation, FetchMeQuery>(
-              _cache,
-              { query: FetchMeDocument },
-              _result,
-              (result, query) => {
-                if (result.registerUser) {
-                  return {
-                    me: result.registerUser,
-                  };
-                }
-                return query;
-              }
-            );
-          },
-          deleteTodo: (_result, _args, _cache, _info) => {
-            updateQuery<DeleteTodoMutation, FetchTodosQuery>(
-              _cache,
-              { query: FetchTodosDocument },
-              _result,
-              (result, query) => {
-                if (result.deleteTodo) {
-                  const data = query.returnAllTodo.filter(
-                    (todo) => todo.id !== _args.id
-                  );
-
-                  return {
-                    returnAllTodo: data,
-                  };
-                }
-                return query;
-              }
-            );
-          },
-        },
+        Mutation,
       },
     }),
     fetchExchange,
