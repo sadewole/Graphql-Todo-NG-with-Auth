@@ -129,6 +129,13 @@ export type User = {
 
 export type RegularUserFragment = { __typename?: 'User', id: string, email: string, username: string };
 
+export type DeleteTodoMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteTodoMutation = { __typename?: 'Mutation', deleteTodo: boolean };
+
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
   email: Scalars['String'];
@@ -168,7 +175,7 @@ export type FetchMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', i
 export type FetchTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchTodosQuery = { __typename?: 'Query', returnAllTodo: Array<{ __typename?: 'Todo', id: string, title: string, completed: boolean, user: { __typename?: 'User', id: string, email: string, username: string } }> };
+export type FetchTodosQuery = { __typename?: 'Query', returnAllTodo: Array<{ __typename?: 'Todo', id: string, title: string, completed: boolean, user_id: string, user: { __typename?: 'User', id: string, email: string, username: string } }> };
 
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
@@ -177,6 +184,15 @@ export const RegularUserFragmentDoc = gql`
   username
 }
     `;
+export const DeleteTodoDocument = gql`
+    mutation DeleteTodo($id: String!) {
+  deleteTodo(id: $id)
+}
+    `;
+
+export function useDeleteTodoMutation() {
+  return Urql.useMutation<DeleteTodoMutation, DeleteTodoMutationVariables>(DeleteTodoDocument);
+};
 export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {
   loginUser(data: {email: $email, password: $password}) {
@@ -238,6 +254,7 @@ export const FetchTodosDocument = gql`
     id
     title
     completed
+    user_id
     user {
       id
       email

@@ -3,8 +3,12 @@ import type { AppProps } from 'next/app';
 import { createClient, dedupExchange, fetchExchange, Provider } from 'urql';
 import { cacheExchange, QueryInput, Cache } from '@urql/exchange-graphcache';
 import {
+  DeleteTodoDocument,
+  DeleteTodoMutation,
   FetchMeDocument,
   FetchMeQuery,
+  FetchTodosDocument,
+  FetchTodosQuery,
   LoginMutation,
   LogoutMutation,
   RegisterMutation,
@@ -61,6 +65,25 @@ const client = createClient({
                 if (result.registerUser) {
                   return {
                     me: result.registerUser,
+                  };
+                }
+                return query;
+              }
+            );
+          },
+          deleteTodo: (_result, _args, _cache, _info) => {
+            updateQuery<DeleteTodoMutation, FetchTodosQuery>(
+              _cache,
+              { query: FetchTodosDocument },
+              _result,
+              (result, query) => {
+                if (result.deleteTodo) {
+                  const data = query.returnAllTodo.filter(
+                    (todo) => todo.id !== _args.id
+                  );
+
+                  return {
+                    returnAllTodo: data,
                   };
                 }
                 return query;

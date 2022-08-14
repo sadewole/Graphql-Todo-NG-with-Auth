@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Todo, useUpdateTodoMutation } from '../generated/graphql';
+import {
+  Todo,
+  useDeleteTodoMutation,
+  useUpdateTodoMutation,
+} from '../generated/graphql';
 
 type TodoProps = { item: Omit<Todo, 'user_id'> };
 
@@ -8,7 +12,8 @@ const TodoList = ({ item }: TodoProps) => {
   const [hovered, setHovered] = useState(false);
   const [todo, setTodo] = useState(item);
   const [editable, setEditable] = useState(false);
-  const [_, updateTodo] = useUpdateTodoMutation();
+  const [_update, updateTodo] = useUpdateTodoMutation();
+  const [_delete, deleteTodo] = useDeleteTodoMutation();
 
   const saveUpdatedTodo = async (data: {
     id: string;
@@ -23,6 +28,16 @@ const TodoList = ({ item }: TodoProps) => {
       });
     } else {
       toast.success('updated successfully', {
+        position: 'top-right',
+        duration: 5000,
+      });
+    }
+  };
+
+  const handleDeleteTodo = async () => {
+    const response = await deleteTodo({ id: todo.id });
+    if (!response.error) {
+      toast.success('deleted successfully', {
         position: 'top-right',
         duration: 5000,
       });
@@ -141,6 +156,7 @@ const TodoList = ({ item }: TodoProps) => {
           <button
             type='button'
             className='text-red-500 p-2 hover:bg-slate-200 hover:rounded-full'
+            onClick={handleDeleteTodo}
           >
             <svg
               className='w-4 h-4'
