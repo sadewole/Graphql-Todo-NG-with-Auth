@@ -48,8 +48,18 @@ export class TodoResolver {
   async updateTodo(
     @Arg('id') id: string,
     @Arg('data')
-    { title, completed }: TodoInput
+    { title, completed }: TodoInput,
+    @Ctx() ctx: MyContext
   ): Promise<Todo> {
+    const findTodo = await TodoModel.findById(id);
+    if (!findTodo) {
+      throw new ApolloError('Todo does not exist', 'BAD_REQUEST');
+    }
+
+    if (String(findTodo.user_id) !== ctx.req.session!.userId) {
+      throw new ApolloError('You can only delete your Todo', 'UNAUTHORISED');
+    }
+
     const todo = (await TodoModel.findByIdAndUpdate(
       id,
       {
