@@ -1,7 +1,29 @@
-import { useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useCreateTodoMutation } from '../generated/graphql';
 
 const AddTodoField = () => {
   const [todo, setTodo] = useState('');
+  const [_, addTodo] = useCreateTodoMutation();
+
+  const onKeyDown = async (e: KeyboardEvent<HTMLElement>) => {
+    if (e.code === 'Enter') {
+      const response = await addTodo({ title: todo });
+      if (!response.error) {
+        toast.success('created successfully', {
+          position: 'top-right',
+          duration: 5000,
+        });
+        setTodo('');
+      } else {
+        toast.error(response.error.graphQLErrors[0].message, {
+          position: 'top-right',
+          duration: 5000,
+        });
+      }
+    }
+  };
+
   return (
     <div className='relative z-0 mt-8 mb-14 w-full group'>
       <input
@@ -12,6 +34,7 @@ const AddTodoField = () => {
         placeholder="Add todo and press 'Enter' key to submit"
         value={todo}
         onChange={(e) => setTodo(e.target.value)}
+        onKeyDown={onKeyDown}
         required
       />
       <label

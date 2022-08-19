@@ -1,0 +1,10 @@
+mutation CreateTodo($title: String!) {
+  createTodo(data: { title: $title }) {
+    title
+    completed
+    id
+    user {
+      ...RegularUser
+    }
+  }
+}

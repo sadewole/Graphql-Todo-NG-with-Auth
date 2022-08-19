@@ -15,6 +15,7 @@ import {
   FetchTodosQuery,
   FetchTodosDocument,
   DeleteTodoMutationVariables,
+  CreateTodoMutation,
 } from '../generated/graphql';
 
 function updateQuery<Result, Query>(
@@ -74,25 +75,36 @@ export const Mutation: MutationProps = {
       }
     );
   },
-  deleteTodo: (_result, _args, _cache, _info) => {
-    // cache.invalidate({
-    //   __typename: 'Todo',
-    //   id: (args as DeleteTodoMutationVariables).id,
-    // });
-    updateQuery<DeleteTodoMutation, FetchTodosQuery>(
+  createTodo: (_result, _args, _cache, _info) => {
+    updateQuery<CreateTodoMutation, FetchTodosQuery>(
       _cache,
       { query: FetchTodosDocument },
       _result,
       (result, query) => {
-        if (result.deleteTodo) {
-          const returnAllTodo = query.returnAllTodo.filter(
-            (todo) => todo.id !== _args.id
-          );
-
-          return { returnAllTodo };
-        }
+        query.returnAllTodo.push(result.createTodo);
         return query;
       }
     );
+  },
+  deleteTodo: (_result, _args, _cache, _info) => {
+    _cache.invalidate({
+      __typename: 'Todo',
+      id: (_args as DeleteTodoMutationVariables).id,
+    });
+    // updateQuery<DeleteTodoMutation, FetchTodosQuery>(
+    //   _cache,
+    //   { query: FetchTodosDocument },
+    //   _result,
+    //   (result, query) => {
+    //     if (result.deleteTodo) {
+    //       const returnAllTodo = query.returnAllTodo.filter(
+    //         (todo) => todo.id !== _args.id
+    //       );
+
+    //       return { returnAllTodo };
+    //     }
+    //     return query;
+    //   }
+    // );
   },
 };
