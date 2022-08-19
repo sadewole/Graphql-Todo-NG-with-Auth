@@ -90,7 +90,7 @@ const Home: NextPage = () => {
               </div>
             ))
           : todoData?.returnAllTodo.map((item, index) => (
-              <Todo item={item} key={index} />
+              <Todo item={item} key={index} isMe={data?.me} />
             ))}
       </main>
       <AuthBase open={authModal} setOpen={setAuthModal} />

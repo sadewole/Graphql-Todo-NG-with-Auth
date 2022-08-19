@@ -3,17 +3,20 @@ import toast from 'react-hot-toast';
 import {
   Todo,
   useDeleteTodoMutation,
+  User,
   useUpdateTodoMutation,
 } from '../generated/graphql';
 
-type TodoProps = { item: Omit<Todo, 'user_id'> };
+type TodoProps = { item: Omit<Todo, 'user_id'>; isMe?: User | null };
 
-const TodoList = ({ item }: TodoProps) => {
+const TodoList = ({ item, isMe }: TodoProps) => {
   const [hovered, setHovered] = useState(false);
   const [todo, setTodo] = useState(item);
   const [editable, setEditable] = useState(false);
   const [_update, updateTodo] = useUpdateTodoMutation();
   const [_delete, deleteTodo] = useDeleteTodoMutation();
+
+  const isOwner = isMe?.id === todo.user.id;
 
   const saveUpdatedTodo = async (data: {
     id: string;
@@ -79,7 +82,9 @@ const TodoList = ({ item }: TodoProps) => {
             id={todo.id}
             type='checkbox'
             disabled={editable}
-            className='w-4 h-4 text-gray-500 cursor-pointer bg-gray-100 rounded border-gray-300 mr-4 peer'
+            className={`w-4 h-4 text-gray-500 cursor-pointer bg-gray-100 rounded border-gray-300 mr-4 peer ${
+              !isOwner ? 'invisible' : ''
+            }`}
             onChange={async (evt) => {
               handleChange(evt.target.checked, 'completed');
               await saveUpdatedTodo({ ...todo, completed: evt.target.checked });
@@ -142,7 +147,9 @@ const TodoList = ({ item }: TodoProps) => {
         </div>
       ) : (
         <div
-          className={`flex items-center gap-2 ${!hovered ? 'invisible' : ''}`}
+          className={`flex items-center gap-2 ${
+            !hovered || !isOwner ? 'invisible' : ''
+          }`}
         >
           <button
             className={`p-2 hover:bg-slate-200 hover:rounded-full ${
