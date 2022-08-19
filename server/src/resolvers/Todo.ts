@@ -57,7 +57,7 @@ export class TodoResolver {
     }
 
     if (String(findTodo.user_id) !== ctx.req.session!.userId) {
-      throw new ApolloError('You can only delete your Todo', 'UNAUTHORISED');
+      throw new ApolloError('You can only update your Todo', 'UNAUTHORISED');
     }
 
     const todo = (await TodoModel.findByIdAndUpdate(

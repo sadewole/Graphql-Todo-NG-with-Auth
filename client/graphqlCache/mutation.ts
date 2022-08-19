@@ -97,11 +97,13 @@ export const Mutation: MutationProps = {
     //   _result,
     //   (result, query) => {
     //     if (result.deleteTodo) {
-    //       const returnAllTodo = query.returnAllTodo.filter(
+    //       query.returnAllTodo = query.returnAllTodo.filter(
     //         (todo) => todo.id !== _args.id
     //       );
 
-    //       return { returnAllTodo };
+    //       console.log(query.returnAllTodo);
+
+    //       return query;
     //     }
     //     return query;
     //   }
