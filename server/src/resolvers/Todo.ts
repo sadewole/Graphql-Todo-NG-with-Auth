@@ -12,6 +12,7 @@ import { Todo, TodoModel } from '../entities/Todo';
 import { TodoInput } from './types/todo-input';
 import { User } from '../entities/User';
 import { MyContext } from 'src/types/myContext';
+import { ApolloError } from 'apollo-server-core';
 
 @Resolver((_of) => Todo)
 export class TodoResolver {
@@ -65,15 +66,19 @@ export class TodoResolver {
   @Mutation(() => Boolean)
   async deleteTodo(
     @Arg('id', () => String) id: string,
-    @Ctx() { req }: MyContext
+    @Ctx() ctx: MyContext
   ): Promise<boolean> {
-    try {
-      await TodoModel.deleteOne({ id, user_id: req.session!.userId });
-
-      return true;
-    } catch {
+    const todo = await TodoModel.findById(id);
+    if (!todo) {
       return false;
     }
+
+    if (String(todo.user_id) !== ctx.req.session!.userId) {
+      throw new ApolloError('You can only delete your Todo', 'UNAUTHORISED');
+    }
+
+    await TodoModel.deleteOne({ _id: id });
+    return true;
   }
 
   // Extract user field on Todo using batch operation

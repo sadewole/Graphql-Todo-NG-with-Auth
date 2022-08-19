@@ -41,6 +41,11 @@ const TodoList = ({ item }: TodoProps) => {
         position: 'top-right',
         duration: 5000,
       });
+    } else {
+      toast.error(response.error.graphQLErrors[0].message, {
+        position: 'top-right',
+        duration: 5000,
+      });
     }
   };
 
@@ -87,7 +92,8 @@ const TodoList = ({ item }: TodoProps) => {
             htmlFor={todo.id}
             className='peer-checked:line-through peer-checked:text-gray-500'
           >
-            {todo.title}
+            {todo.title} <br />
+            <em className='text-xs'>created by {todo.user.username}</em>
           </label>
         ) : (
           <input

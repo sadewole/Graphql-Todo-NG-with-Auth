@@ -86,7 +86,7 @@ export const Mutation: MutationProps = {
       (result, query) => {
         if (result.deleteTodo) {
           const returnAllTodo = query.returnAllTodo.filter(
-            (todo) => todo.id === _args.id
+            (todo) => todo.id !== _args.id
           );
 
           return { returnAllTodo };
