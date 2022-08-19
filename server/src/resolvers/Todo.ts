@@ -63,9 +63,17 @@ export class TodoResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async deleteTodo(@Arg('id') id: string) {
-    await TodoModel.deleteOne({ id });
-    return true;
+  async deleteTodo(
+    @Arg('id', () => String) id: string,
+    @Ctx() { req }: MyContext
+  ): Promise<boolean> {
+    try {
+      await TodoModel.deleteOne({ id, user_id: req.session!.userId });
+
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   // Extract user field on Todo using batch operation

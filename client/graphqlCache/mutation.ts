@@ -14,6 +14,7 @@ import {
   DeleteTodoMutation,
   FetchTodosQuery,
   FetchTodosDocument,
+  DeleteTodoMutationVariables,
 } from '../generated/graphql';
 
 function updateQuery<Result, Query>(
@@ -74,19 +75,21 @@ export const Mutation: MutationProps = {
     );
   },
   deleteTodo: (_result, _args, _cache, _info) => {
+    // cache.invalidate({
+    //   __typename: 'Todo',
+    //   id: (args as DeleteTodoMutationVariables).id,
+    // });
     updateQuery<DeleteTodoMutation, FetchTodosQuery>(
       _cache,
       { query: FetchTodosDocument },
       _result,
       (result, query) => {
         if (result.deleteTodo) {
-          const data = query.returnAllTodo.filter(
-            (todo) => todo.id !== _args.id
+          const returnAllTodo = query.returnAllTodo.filter(
+            (todo) => todo.id === _args.id
           );
 
-          return {
-            returnAllTodo: data,
-          };
+          return { returnAllTodo };
         }
         return query;
       }
