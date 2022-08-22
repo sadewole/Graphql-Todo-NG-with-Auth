@@ -7,10 +7,7 @@ import {
   useUpdateTodoMutation,
 } from '../generated/graphql';
 import GrabToDrag from './draggable/GrabToDrag';
-
-type Item<T> = {
-  [K in keyof T as Exclude<K, 'user_id'>]: T[K];
-};
+import { Item } from './interface';
 
 type TodoProps = { item: Item<Todo>; isMe?: User | null; idx: number };
 // type TodoProps = { item: Omit<Todo, 'user_id'>; isMe?: User | null };

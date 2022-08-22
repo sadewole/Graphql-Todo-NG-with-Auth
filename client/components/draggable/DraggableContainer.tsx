@@ -1,9 +1,43 @@
 import React, { ReactNode } from 'react';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from '@hello-pangea/dnd';
+import { Todo, useUpdateTodoMutation } from 'generated/graphql';
+import { Item } from '@components/interface';
 
-const DraggableContainer = ({ children }: { children: ReactNode }) => {
-  const onDragEnd = (result: DropResult) => {
-    console.log('onDragEnd');
+const DraggableContainer = ({
+  allTodo,
+  children,
+}: {
+  children: ReactNode;
+  allTodo?: Item<Todo>[];
+}) => {
+  const [_update, updateTodo] = useUpdateTodoMutation();
+
+  const onDragEnd = async (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    if (destination.droppableId === source.droppableId) {
+      return;
+    }
+
+    const findItem = allTodo?.find(
+      (todo) => todo.id === draggableId
+    ) as Item<Todo>;
+
+    await updateTodo({
+      id: findItem.id,
+      title: findItem.title,
+      completed: destination.droppableId !== 'column-1',
+    });
   };
   return <DragDropContext onDragEnd={onDragEnd}>{children}</DragDropContext>;
 };

@@ -46,7 +46,7 @@ const Home: NextPage = () => {
             </div>
           ))
         ) : (
-          <DraggableContainer>
+          <DraggableContainer allTodo={todoData?.returnAllTodo}>
             {columns.map((col) => (
               <Column title={col.title} key={col.id} id={col.id}>
                 {todoData?.returnAllTodo.map(

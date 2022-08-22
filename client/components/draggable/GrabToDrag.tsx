@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Draggable } from 'react-beautiful-dnd';
+import { Draggable } from '@hello-pangea/dnd';
 
 type GrabToDragProps = {
   id: string;
@@ -11,19 +11,21 @@ type GrabToDragProps = {
 const GrabToDrag = ({ id, children, idx, isOwner }: GrabToDragProps) => {
   return (
     <Draggable draggableId={id} index={idx}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <div
           className='relative'
-          {...provided.draggableProps}
           ref={provided.innerRef}
+          {...provided.draggableProps}
         >
-          {isOwner && (
-            <div
-              className='w-4 h-10 absolute top-1/4 -left-2 bg-yellow-500'
-              {...provided.dragHandleProps}
-            />
-          )}
-          <div>{children}</div>
+          {/* {isOwner && ( */}
+          <div
+            {...provided.dragHandleProps}
+            className='w-4 h-10 absolute top-1/4 -left-2 bg-yellow-500 rounded'
+          />
+          {/* )} */}
+          <div className={snapshot.isDragging ? 'bg-green-50' : 'bg-white'}>
+            {children}
+          </div>
         </div>
       )}
     </Draggable>
