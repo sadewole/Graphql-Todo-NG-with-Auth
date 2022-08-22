@@ -2,9 +2,9 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import AddTodoField from '../components/AddTodoField';
-import { AuthBase } from '../components/auth/AuthBase';
-import Todo from '../components/Todo';
+import AddTodoField from '@components/AddTodoField';
+import { AuthBase } from '@components/auth/AuthBase';
+import Todo from '@components/Todo';
 import {
   useFetchMeQuery,
   useFetchTodosQuery,
@@ -15,7 +15,7 @@ const Home: NextPage = () => {
   const [authModal, setAuthModal] = useState(false);
   const [{ data, fetching }] = useFetchMeQuery();
   const [{ data: todoData, fetching: todoFetching }] = useFetchTodosQuery();
-  const [_, logout] = useLogoutMutation();
+  const [, logout] = useLogoutMutation();
 
   const handleLogout = async () => {
     await logout();

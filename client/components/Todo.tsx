@@ -7,14 +7,19 @@ import {
   useUpdateTodoMutation,
 } from '../generated/graphql';
 
-type TodoProps = { item: Omit<Todo, 'user_id'>; isMe?: User | null };
+type Item<T> = {
+  [K in keyof T as Exclude<K, 'user_id'>]: T[K];
+};
+
+type TodoProps = { item: Item<Todo>; isMe?: User | null };
+// type TodoProps = { item: Omit<Todo, 'user_id'>; isMe?: User | null };
 
 const TodoList = ({ item, isMe }: TodoProps) => {
   const [hovered, setHovered] = useState(false);
   const [todo, setTodo] = useState(item);
   const [editable, setEditable] = useState(false);
-  const [_update, updateTodo] = useUpdateTodoMutation();
-  const [_delete, deleteTodo] = useDeleteTodoMutation();
+  const [, updateTodo] = useUpdateTodoMutation();
+  const [, deleteTodo] = useDeleteTodoMutation();
 
   const isOwner = isMe?.id === todo.user.id;
 
@@ -52,7 +57,7 @@ const TodoList = ({ item, isMe }: TodoProps) => {
     }
   };
 
-  const handleChange = (value: any, prop: string) => {
+  const handleChange = (value: unknown, prop: string) => {
     setTodo((prev) => ({ ...prev, [prop]: value }));
   };
 
