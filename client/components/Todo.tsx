@@ -18,8 +18,8 @@ const TodoList = ({ item, isMe }: TodoProps) => {
   const [hovered, setHovered] = useState(false);
   const [todo, setTodo] = useState(item);
   const [editable, setEditable] = useState(false);
-  const [, updateTodo] = useUpdateTodoMutation();
-  const [, deleteTodo] = useDeleteTodoMutation();
+  const [_update, updateTodo] = useUpdateTodoMutation();
+  const [_delete, deleteTodo] = useDeleteTodoMutation();
 
   const isOwner = isMe?.id === todo.user.id;
 

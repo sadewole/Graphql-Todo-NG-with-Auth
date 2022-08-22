@@ -15,7 +15,7 @@ const Home: NextPage = () => {
   const [authModal, setAuthModal] = useState(false);
   const [{ data, fetching }] = useFetchMeQuery();
   const [{ data: todoData, fetching: todoFetching }] = useFetchTodosQuery();
-  const [, logout] = useLogoutMutation();
+  const [_, logout] = useLogoutMutation();
 
   const handleLogout = async () => {
     await logout();
