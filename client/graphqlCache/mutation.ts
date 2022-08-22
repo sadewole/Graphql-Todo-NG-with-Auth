@@ -11,7 +11,7 @@ import {
   FetchMeDocument,
   LoginMutation,
   RegisterMutation,
-  DeleteTodoMutation,
+  // DeleteTodoMutation,
   FetchTodosQuery,
   FetchTodosDocument,
   DeleteTodoMutationVariables,

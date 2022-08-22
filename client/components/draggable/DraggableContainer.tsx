@@ -5,11 +5,7 @@ const DraggableContainer = ({ children }: { children: ReactNode }) => {
   const onDragEnd = (result: DropResult) => {
     console.log('onDragEnd');
   };
-  return (
-    <div>
-      <DragDropContext onDragEnd={onDragEnd}>{children}</DragDropContext>
-    </div>
-  );
+  return <DragDropContext onDragEnd={onDragEnd}>{children}</DragDropContext>;
 };
 
 export default DraggableContainer;

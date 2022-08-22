@@ -15,6 +15,7 @@ const Header = ({
   const handleLogout = async () => {
     await logout();
   };
+
   return (
     <header className='px-4 py-3 flex items-center justify-between shadow-md'>
       <div className='flex gap-2 items-center'>

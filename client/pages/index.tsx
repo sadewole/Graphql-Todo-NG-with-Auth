@@ -38,7 +38,6 @@ const Home: NextPage = () => {
       <Header fetching={fetching} userData={data} setAuthModal={setAuthModal} />
       <main className='max-w-[640px] mx-auto'>
         <AddTodoField />
-
         {todoFetching ? (
           [1, 2, 3].map((i) => (
             <div role='status' className='animate-pulse' key={i}>
@@ -49,11 +48,16 @@ const Home: NextPage = () => {
         ) : (
           <DraggableContainer>
             {columns.map((col) => (
-              <Column title={col.title} key={col.id}>
+              <Column title={col.title} key={col.id} id={col.id}>
                 {todoData?.returnAllTodo.map(
-                  (todo) =>
+                  (todo, idx) =>
                     todo.completed === col.status && (
-                      <Todo item={todo} key={todo.id} isMe={data?.me} />
+                      <Todo
+                        item={todo}
+                        key={todo.id}
+                        isMe={data?.me}
+                        idx={idx}
+                      />
                     )
                 )}
               </Column>

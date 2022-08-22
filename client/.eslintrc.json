@@ -28,7 +28,7 @@
         { "vars": "all", "args": "none", "ignoreRestSiblings": true, "varsIgnorePattern": "^_"
         }
       ],
-      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-empty-interface": "error",
       "@typescript-eslint/no-namespace": "error",
       "@typescript-eslint/no-var-requires": "error",
