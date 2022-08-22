@@ -86,10 +86,8 @@ const TodoList = ({ item, isMe }: TodoProps) => {
             checked={todo.completed}
             id={todo.id}
             type='checkbox'
-            disabled={editable}
-            className={`w-4 h-4 text-gray-500 cursor-pointer bg-gray-100 rounded border-gray-300 mr-4 peer ${
-              !isOwner ? 'invisible' : ''
-            }`}
+            disabled={editable || !isOwner}
+            className='w-4 h-4 text-gray-500 cursor-pointer bg-gray-100 rounded border-gray-300 mr-4 peer'
             onChange={async (evt) => {
               handleChange(evt.target.checked, 'completed');
               await saveUpdatedTodo({ ...todo, completed: evt.target.checked });
