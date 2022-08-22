@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { Todo, useUpdateTodoMutation } from 'generated/graphql';
-import { Item } from '@components/interface';
+import { Item } from 'interface';
 
 const DraggableContainer = ({
   allTodo,

@@ -10,19 +10,19 @@ type GrabToDragProps = {
 
 const GrabToDrag = ({ id, children, idx, isOwner }: GrabToDragProps) => {
   return (
-    <Draggable draggableId={id} index={idx}>
+    <Draggable draggableId={id} index={idx} isDragDisabled={!isOwner}>
       {(provided, snapshot) => (
         <div
           className='relative'
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
-          {/* {isOwner && ( */}
-          <div
-            {...provided.dragHandleProps}
-            className='w-4 h-10 absolute top-1/4 -left-2 bg-yellow-500 rounded'
-          />
-          {/* )} */}
+          {isOwner && (
+            <div
+              {...provided.dragHandleProps}
+              className='w-4 h-10 absolute top-1/4 -left-2 bg-yellow-500 rounded'
+            />
+          )}
           <div className={snapshot.isDragging ? 'bg-green-50' : 'bg-white'}>
             {children}
           </div>
