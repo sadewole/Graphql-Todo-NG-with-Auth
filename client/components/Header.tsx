@@ -20,7 +20,12 @@ const Header = ({
     <header className='px-4 py-3 flex items-center justify-between shadow-md'>
       <div className='flex gap-2 items-center'>
         <h1>Todo NG</h1>
-        <a href='/' className='hover:text-blue-500'>
+        <a
+          href='https://github.com/sadewole/bookish-list'
+          target='_blank'
+          className='hover:text-blue-500'
+          rel='noreferrer'
+        >
           <svg
             className='w-5 h-5'
             xmlns='http://www.w3.org/2000/svg'
