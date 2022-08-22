@@ -39,7 +39,15 @@ const DraggableContainer = ({
       completed: destination.droppableId !== 'column-1',
     });
   };
-  return <DragDropContext onDragEnd={onDragEnd}>{children}</DragDropContext>;
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div className='text-sm p-2 bg-gray-200 rounded flex'>
+        You can also change the status of your todo by holding down{' '}
+        <div className='w-2.5 h-4 bg-yellow-500 mx-1'></div> to drag
+      </div>
+      {children}
+    </DragDropContext>
+  );
 };
 
 export default DraggableContainer;

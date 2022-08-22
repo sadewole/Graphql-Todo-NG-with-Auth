@@ -45,7 +45,7 @@ const Home: NextPage = () => {
               <span className='sr-only'>Loading...</span>
             </div>
           ))
-        ) : (
+        ) : todoData?.returnAllTodo.length ? (
           <DraggableContainer allTodo={todoData?.returnAllTodo}>
             {columns.map((col) => (
               <Column title={col.title} key={col.id} id={col.id}>
@@ -63,6 +63,10 @@ const Home: NextPage = () => {
               </Column>
             ))}
           </DraggableContainer>
+        ) : (
+          <p className='text-sm p-2 bg-gray-200 rounded'>
+            Hai....the todo list is empty😬. Please, start by adding a todo🤗
+          </p>
         )}
       </main>
       <AuthBase open={authModal} setOpen={setAuthModal} />
